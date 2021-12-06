@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Fragment } from "react";
-import styles from "../styles/Home.module.css";
+import { createElement } from "react";
+import { Card } from "../components/Card";
+import { Header } from "../components/Header";
 
 const Home: NextPage = () => {
     return (
-        <Fragment>
+        <>
             <Head>
                 <title>Meu Porquinho</title>
                 <meta
@@ -16,16 +17,25 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className={styles.main}></main>
+            <Header></Header>
+            <main className="mx-auto  max-w-5xl">
+                <section className="px-8 flex flex-row flex-wrap justify-between">
+                    <h2 className="inline-block w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
+                        Porquinhos Populares
+                    </h2>
+                    <Card></Card>
+                </section>
+            </main>
 
-            <footer className={styles.footer}>
+            <footer className="fixed bottom-0 flex justify-center w-full">
                 <a
                     href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className=""
                 >
                     Powered by{" "}
-                    <span className={styles.logo}>
+                    <span>
                         <Image
                             src="/vercel.svg"
                             alt="Vercel Logo"
@@ -35,7 +45,7 @@ const Home: NextPage = () => {
                     </span>
                 </a>
             </footer>
-        </Fragment>
+        </>
     );
 };
 

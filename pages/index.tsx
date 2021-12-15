@@ -23,7 +23,22 @@ const Home: NextPage = () => {
                     <h2 className="inline-block w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
                         Porquinhos Populares
                     </h2>
-                    <Card></Card>
+                    <Card
+                        title="Lorem ipsum dolor sit amet"
+                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Duis vel feugiat lorem. In eleifend magna ut nulla ornare
+                    suscipit. Maecenas vitae ullamcorper eros. Curabitur vitae
+                    sem turpis. Sed dolor augue, viverra a massa et, iaculis
+                    accumsan tortor. Etiam scelerisque feugiat tincidunt."
+                        goal={5138}
+                        achieved={4600}
+                    ></Card>
+                    <Card
+                        title="Amigos do Arthur"
+                        description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                        goal={10000}
+                        achieved={230}
+                    ></Card>
                 </section>
             </main>
 

@@ -8,6 +8,19 @@
 
 @layer base {
     html {
-        background-color: #EFEFEF
+        background-color: #EFEFEF;
     }
+}
+
+/* Customize WYSIWYG Editor */
+.ql-toolbar.ql-snow {
+    @apply rounded-t-lg;
+}
+
+.ql-container.ql-snow {
+    @apply rounded-b-lg;
+    @apply text-base
+}
+.ql-snow * {
+    @apply font-fm-primary
 }

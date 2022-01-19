@@ -1,15 +1,24 @@
 // Import Dependencies
-import { createElement, FunctionComponent, useMemo } from "react";
+import {
+    createElement,
+    FunctionComponent,
+    MouseEventHandler,
+    useMemo,
+} from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 // Export Component
 export const Card: FunctionComponent<{
     className?: string;
+    id: string;
     title: string;
     description: string;
     goal: number;
     achieved: number;
-}> = ({ title, description, goal, achieved }) => {
+}> = ({ id, title, description, goal, achieved }) => {
+    // Define Hooks
+    const router = useRouter();
     // Compute percentages
     const achievedRatio = useMemo(() => {
         const ratio = achieved / goal;
@@ -19,9 +28,19 @@ export const Card: FunctionComponent<{
         () => (achievedRatio * 100).toFixed(0),
         [achievedRatio]
     );
+    // Define Handlers
+    const handleClick: MouseEventHandler<HTMLElement> = (event) => {
+        // Prevent Default
+        event.preventDefault();
+        // Go to Pool Page
+        router.push(`/pool/${id}`);
+    };
     // Define Render
     return (
-        <section className="w-5/12 bg-gray-300 rounded-lg drop-shadow-md hover:scale-105 transition-transform hover:cursor-pointer overflow-hidden">
+        <section
+            className="w-full max-w-sm bg-gray-300 rounded-lg drop-shadow-md hover:scale-105 transition-transform hover:cursor-pointer overflow-hidden"
+            onClick={handleClick}
+        >
             <div className="relative h-32">
                 <Image
                     src="/images/placeholder-image.svg"
@@ -32,7 +51,17 @@ export const Card: FunctionComponent<{
             </div>
             <section className="px-3 py-3 h-full bg-white font-fm-primary space-y-1">
                 <h3 className="text-base font-bold">{title}</h3>
-                <p className="text-sm">{description}</p>
+                <p
+                    className="text-sm h-[7.5rem] overflow-ellipsis overflow-hidden"
+                    style={{
+                        display: "-webkit-box",
+                        lineClamp: 6,
+                        WebkitLineClamp: 6,
+                        WebkitBoxOrient: "vertical",
+                    }}
+                >
+                    {description}
+                </p>
                 <div className="flex justify-between align-baseline items-end">
                     <span className="text-2xl font-bold text-[#F56956]">
                         {achievedPercentage}%

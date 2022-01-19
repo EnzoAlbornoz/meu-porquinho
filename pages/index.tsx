@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
+import { v4 as randomUUID } from "uuid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { createElement } from "react";
 import { Card } from "../components/Card";
+import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 
 const Home: NextPage = () => {
@@ -18,48 +20,96 @@ const Home: NextPage = () => {
             </Head>
 
             <Header></Header>
-            <main className="mx-auto  max-w-5xl">
-                <section className="px-8 flex flex-row flex-wrap justify-between">
-                    <h2 className="inline-block w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
+            <main className="mx-auto max-w-7xl pb-8 sm:min-h-[calc(100vh-9.5rem)]">
+                <section id="most-popular" className="">
+                    <h2 className="w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
                         Porquinhos Populares
                     </h2>
-                    <Card
-                        title="Lorem ipsum dolor sit amet"
-                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    <ul className="px-8 grid grid-cols-3 gap-6">
+                        <Card
+                            id={randomUUID()}
+                            title="Lorem ipsum dolor sit amet"
+                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Duis vel feugiat lorem. In eleifend magna ut nulla ornare
                     suscipit. Maecenas vitae ullamcorper eros. Curabitur vitae
                     sem turpis. Sed dolor augue, viverra a massa et, iaculis
                     accumsan tortor. Etiam scelerisque feugiat tincidunt."
-                        goal={5138}
-                        achieved={4600}
-                    ></Card>
-                    <Card
-                        title="Amigos do Arthur"
-                        description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                        goal={10000}
-                        achieved={230}
-                    ></Card>
+                            goal={5138}
+                            achieved={4600}
+                        ></Card>
+                        <Card
+                            id={randomUUID()}
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            id={randomUUID()}
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        {/* <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card>
+                        <Card
+                            title="Amigos do Arthur"
+                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
+                            goal={10000}
+                            achieved={230}
+                        ></Card> */}
+                    </ul>
                 </section>
             </main>
 
-            <footer className="fixed bottom-0 flex justify-center w-full">
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className=""
-                >
-                    Powered by{" "}
-                    <span>
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
-                        />
-                    </span>
-                </a>
-            </footer>
+            <Footer />
         </>
     );
 };

@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  database:
+    image: "mongo:4"
+    volumes:
+      - "database"
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: meu_porquinho
+      MONGO_INITDB_ROOT_PASSWORD: meu_porquinho
+      MONGO_INITDB_DATABASE: meu_porquinho
+
+volumes:
+  database:

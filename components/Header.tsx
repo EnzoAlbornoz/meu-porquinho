@@ -7,7 +7,7 @@ export const Header: FunctionComponent = (props) => {
     // Define Render
     return (
         <header className="h-12 sm:h-24 bg-white">
-            <nav className="px-3 sm:px-14 mx-auto w-full h-full max-w-5xl flex justify-between space-x-9">
+            <nav className="px-3 sm:px-0 mx-auto w-full h-full max-w-7xl flex justify-between space-x-9">
                 <Link href="/" passHref>
                     <section className="flex space-x-4 hover:cursor-pointer">
                         <PigSvg className="w-8 sm:w-16"></PigSvg>

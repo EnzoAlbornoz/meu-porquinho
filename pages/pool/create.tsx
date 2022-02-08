@@ -15,7 +15,9 @@ import { Footer } from "../../components/Footer";
 import { useQuill } from "react-quilljs";
 import Delta from "quill-delta";
 import { imageHandler } from "../../lib/quill/imageHandler";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { useRouter } from "next/router";
+import { useJWTUser } from "../../lib/hooks/withJWT";
 // Define Page
 const Pool: NextPage = () => {
     // Define Editor
@@ -25,6 +27,7 @@ const Pool: NextPage = () => {
         modules: {},
     });
     // Define State
+    const router = useRouter();
     const [title, setTitle] = useState("");
     const [goal, setGoal] = useState(1);
     // Define Handlers
@@ -58,18 +61,25 @@ const Pool: NextPage = () => {
         const quillDelta = quill?.getContents() || new Delta();
         // Build Payload
         const payload = {
-            title,
+            title: title.trim(),
             goal,
             description: quillDelta,
         };
         // Send Request
-        const req = axios.post(
-            new URL("/api/pool", location.toString()).toString(),
-            payload
-        );
-        req.then((res) => console.log(res.request)).catch((error) =>
-            console.log(error)
-        );
+        axios
+            .post(
+                new URL("/api/pool", location.toString()).toString(),
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                    },
+                }
+            )
+            .then((res: AxiosResponse<{ data: { id: string } }>) =>
+                router.push(`/pool/${res.data.data.id}`)
+            )
+            .catch((error) => console.error(error));
     };
     // Define Rendering
     return (
@@ -101,7 +111,10 @@ const Pool: NextPage = () => {
                                 placeholder="Título do porquinho"
                                 required
                                 value={title}
-                                onChange={handleFormStateUpdate(setTitle)}
+                                onChange={handleFormStateUpdate(
+                                    setTitle,
+                                    false
+                                )}
                             />
                         </fieldset>
                         <fieldset

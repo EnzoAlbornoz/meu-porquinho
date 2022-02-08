@@ -10,7 +10,7 @@ const get: NextApiHandler = async (req, res) => {
     const { pid } = req.query;
     // Fetch Data
     const db = await getDb();
-    const pool = db.collection("pools").findOne({
+    const pool = await db.collection("pools").findOne({
         id: new ObjectId(pid as string),
     });
     // Respond with data

@@ -1,18 +1,24 @@
+import axios, { AxiosError, AxiosResponse } from "axios";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import {
     type ChangeEvent,
     type Dispatch,
     type SetStateAction,
     useState,
     FormEvent,
+    useMemo,
 } from "react";
 import { Card } from "../components/Card";
 import { Header } from "../components/Header";
 
 const Login: NextPage = () => {
     // Define State
+    const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isRequesting, setRequesting] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     // Define Handlers
@@ -20,15 +26,77 @@ const Login: NextPage = () => {
         stateUpdater: Dispatch<SetStateAction<string>>,
         trim = true
     ) => {
-        return (event: ChangeEvent<HTMLInputElement>) =>
+        return (event: ChangeEvent<HTMLInputElement>) => {
+            setErrorMessage(null);
             stateUpdater(trim ? event.target.value.trim() : event.target.value);
+        };
     };
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         // Prevent Reload
         event.preventDefault();
+        // Start Loading
+        setRequesting(true);
         // Submit Data
         console.log(username, password);
+        axios
+            .post("/api/user/login", {
+                username,
+                password,
+            })
+            .then(
+                (
+                    res: AxiosResponse<{
+                        status: string;
+                        message: string;
+                        data: {
+                            id: string;
+                            token: string;
+                            walletToken: string;
+                        };
+                    }>
+                ) => {
+                    // Store Token
+                    localStorage.setItem("jwt", res.data.data.token);
+                    // Redirect to Home
+                    router.push("/");
+                }
+            )
+            .catch(
+                (
+                    error: AxiosError<{
+                        status: string;
+                        message: string;
+                        data: null;
+                    }>
+                ) => {
+                    // Switch Error and Show Error
+                    switch (error.code) {
+                        case "404":
+                            setErrorMessage("Usuário inválido");
+                        case "401":
+                            setErrorMessage("Senha incorreta");
+                        default:
+                            setErrorMessage("Um erro desconhecido aconteceu");
+                            break;
+                    }
+                    console.error(error);
+                }
+            )
+            .finally(() => setRequesting(false));
     };
+    // Define SubRender
+    const errorDisplay = useMemo(() => {
+        if (!errorMessage) {
+            return (
+                <div className="text-center text-red-500 text-bold transition-all dtransition-all duration-500 ease-out transform-gpu scale-y-0"></div>
+            );
+        }
+        return (
+            <div className="mt-4 -mb-4 text-center text-red-500 text-bold transition-all duration-500 ease-out transform-gpu">
+                {errorMessage}
+            </div>
+        );
+    }, [errorMessage]);
     // Define Rendering
     return (
         <>
@@ -68,17 +136,19 @@ const Login: NextPage = () => {
                             />
                         </fieldset>
                         <button
+                            disabled={isRequesting}
                             className="w-full h-10 text-2xl text-white font-bold rounded-lg bg-[#F9A195]"
                             type="submit"
                         >
                             Entrar
                         </button>
+                        {errorDisplay}
                     </form>
-                    <footer className="mt-8 text-center text-gray-500">
+                    <footer className="mt-4 text-center text-gray-500">
                         Ainda não se cadastrou? Clique{" "}
-                        <a className="text-[#F9A195]" href="/register">
-                            aqui
-                        </a>{" "}
+                        <Link href="/register" passHref>
+                            <a className="text-[#F9A195]">aqui</a>
+                        </Link>{" "}
                         e cadastre-se já.
                     </footer>
                 </section>

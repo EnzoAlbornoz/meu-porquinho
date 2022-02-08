@@ -42,12 +42,12 @@ const get: NextApiHandler = async (req, res) => {
     // Has file - Download it
     const fileStream = bucket.openDownloadStream(fileId);
     // Define Response
-    res.status(200)
-        .setHeader(
-            "Content-Type",
-            fileMeta.metadata?.mimeType || fileMeta.contentType
-        )
-        .setHeader("Content-Length", fileMeta.length);
+    res.status(200);
+    res.setHeader(
+        "Content-Type",
+        fileMeta.metadata?.mimeType || fileMeta.contentType
+    );
+    res.setHeader("Content-Length", fileMeta.length);
     // Start Streaming Data
     return pipeline(fileStream as Readable, res as Writable);
 };

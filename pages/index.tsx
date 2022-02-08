@@ -1,13 +1,71 @@
 /* eslint-disable @next/next/no-img-element */
 import { v4 as randomUUID } from "uuid";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { Card } from "../components/Card";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-
-const Home: NextPage = () => {
+import { DbPool, PublicPool } from "../lib/interfaces/Pool";
+import { getDb } from "../lib/api/mongodb";
+import { useMemo } from "react";
+import { WithId } from "mongodb";
+import Delta from "quill-delta";
+import pool from "./api/pool";
+import EmptySvg from "../public/images/empty.svg";
+// Define Types
+interface HomePageProps {
+    pools: Array<PublicPool<true> & { raised: number }>;
+}
+// Define Page
+const Home: NextPage<HomePageProps> = ({ pools }) => {
+    // Define Subrenders
+    const cards = useMemo(() => {
+        if (pools.length === 0) {
+            return (
+                <div className="md:my-[25vh] max-w-[10rem] mx-auto font-fm-primary text-center">
+                    <EmptySvg className="opacity-10"></EmptySvg>
+                    <span className="opacity-40">Lista vazia</span>
+                </div>
+            );
+        }
+        return (
+            <ul className="px-8 grid grid-cols-3 gap-6">
+                {pools.map((pool) => {
+                    const delta = new Delta(pool.description);
+                    const image = delta
+                        .filter(
+                            (op) =>
+                                typeof op.insert === "object" &&
+                                !!(op.insert as any).image
+                        )
+                        .map((op: any): string => op.insert.image)
+                        .map((imgUrl) => new URL(imgUrl).pathname)
+                        .at(0);
+                    const descriptionText = delta.reduce((text, op) => {
+                        if (!op.insert)
+                            throw new TypeError(
+                                "only `insert` operations can be transformed!"
+                            );
+                        if (typeof op.insert !== "string") return text + " ";
+                        return text + op.insert;
+                    }, "");
+                    return (
+                        <Card
+                            key={pool.id}
+                            id={pool.id}
+                            title={pool.title}
+                            description={descriptionText}
+                            goal={pool.goal}
+                            achieved={pool.raised}
+                            image={image}
+                        ></Card>
+                    );
+                })}
+            </ul>
+        );
+    }, [pools]);
+    // Define Render
     return (
         <>
             <Head>
@@ -25,8 +83,7 @@ const Home: NextPage = () => {
                     <h2 className="w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
                         Porquinhos Populares
                     </h2>
-                    <ul className="px-8 grid grid-cols-3 gap-6">
-                        <Card
+                    {/* <Card
                             id={randomUUID()}
                             title="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -50,62 +107,8 @@ const Home: NextPage = () => {
                             description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
                             goal={10000}
                             achieved={230}
-                        ></Card>
-                        {/* <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
-                        ></Card>
-                        <Card
-                            title="Amigos do Arthur"
-                            description="Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude.Estamos fazendo uma vaquinha para ajudar no tratamento do nosso amigo arthur. Ele sofre de uma rara doença chamada LEIAUTISMO, cujo unico tratamento é com o Doutor Güntzel. Por favor, nos ajude"
-                            goal={10000}
-                            achieved={230}
                         ></Card> */}
-                    </ul>
+                    {cards}
                 </section>
             </main>
 
@@ -115,3 +118,58 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+// Export Server Side Functions
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
+    context
+) => {
+    // Fetch pools
+    const db = await getDb();
+    // const poolDocs = await db
+    //     .collection<DbPool>("pools")
+    //     .find()
+    //     .sort({ "meta.updatedAt": -1 })
+    //     .limit(9)
+    //     .toArray();
+    const poolDocs = await db
+        .collection<DbPool>("pools")
+        .aggregate<WithId<DbPool & { raised: number }>>([
+            { $sort: { "meta.updatedAt": -1 } },
+            {
+                $lookup: {
+                    from: "donations",
+                    localField: "_id",
+                    foreignField: "pool",
+                    as: "raised",
+                },
+            },
+            {
+                $addFields: {
+                    raised: {
+                        $sum: "$raised.amount",
+                    },
+                },
+            },
+            {
+                $limit: 9,
+            },
+        ])
+        .toArray();
+    const pools: Array<PublicPool<true> & { raised: number }> = poolDocs.map(
+        (poolDoc) => ({
+            id: poolDoc._id.toString(),
+            title: poolDoc.title,
+            creator: poolDoc.creator.toString(),
+            description: poolDoc.description,
+            goal: poolDoc.goal,
+            raised: poolDoc.raised,
+            meta: {
+                createdAt: poolDoc.meta.createdAt.toISOString(),
+                updatedAt: poolDoc.meta.updatedAt.toISOString(),
+            },
+        })
+    );
+    // Return data
+    return {
+        props: { pools },
+    };
+};

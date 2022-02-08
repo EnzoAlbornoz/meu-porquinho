@@ -1,18 +1,24 @@
+import axios, { AxiosError, AxiosResponse } from "axios";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import {
     type ChangeEvent,
     type Dispatch,
     type SetStateAction,
     useState,
     FormEvent,
+    useMemo,
 } from "react";
 import { Card } from "../components/Card";
 import { Header } from "../components/Header";
 
 const Login: NextPage = () => {
     // Define State
+    const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isRequesting, setRequesting] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordRepeated, setPasswordRepeated] = useState("");
@@ -35,8 +41,64 @@ const Login: NextPage = () => {
             return;
         }
         // Submit Data
-        console.log(username, password);
+        axios
+            .post("/api/user/register", {
+                username,
+                password,
+            })
+            .then(
+                (
+                    res: AxiosResponse<{
+                        status: string;
+                        message: string;
+                        data: {
+                            id: string;
+                            token: string;
+                        };
+                    }>
+                ) => {
+                    // Store Token
+                    localStorage.setItem("jwt", res.data.data.token);
+                    // Redirect to Home
+                    router.push("/");
+                }
+            )
+            .catch(
+                (
+                    error: AxiosError<{
+                        status: string;
+                        message: string;
+                        data: null;
+                    }>
+                ) => {
+                    // Switch Error and Show Error
+                    switch (error.code) {
+                        case "400":
+                            setErrorMessage("Dados inválidos");
+                        case "409":
+                            setErrorMessage("Usuário já cadastrado");
+                        default:
+                            setErrorMessage("Um erro desconhecido aconteceu");
+                            break;
+                    }
+                    console.error(error);
+                }
+            )
+            .finally(() => setRequesting(false));
     };
+    // Define SubRender
+    const errorDisplay = useMemo(() => {
+        if (!errorMessage) {
+            return (
+                <div className="text-center text-red-500 text-bold transition-all dtransition-all duration-500 ease-out transform-gpu scale-y-0"></div>
+            );
+        }
+        return (
+            <div className="mt-4 -mb-4 text-center text-red-500 text-bold transition-all duration-500 ease-out transform-gpu">
+                {errorMessage}
+            </div>
+        );
+    }, [errorMessage]);
     // Define Rendering
     return (
         <>
@@ -90,17 +152,19 @@ const Login: NextPage = () => {
                             />
                         </fieldset>
                         <button
+                            disabled={isRequesting}
                             className="w-full h-10 text-2xl text-white font-bold rounded-lg bg-[#F9A195]"
                             type="submit"
                         >
                             Cadastrar
                         </button>
+                        {errorDisplay}
                     </form>
                     <footer className="mt-8 text-center text-gray-500">
                         Já possui uma conta? Clique{" "}
-                        <a className="text-[#F9A195]" href="/login">
-                            aqui
-                        </a>{" "}
+                        <Link href="/login" passHref>
+                            <a className="text-[#F9A195]">aqui</a>
+                        </Link>{" "}
                         e acesse seus porquinhos.
                     </footer>
                 </section>

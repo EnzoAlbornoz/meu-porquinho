@@ -8,6 +8,8 @@ declare namespace NodeJS {
         readonly MONGO_USER: string;
         readonly MONGO_PASS: string;
         readonly MONGO_DB: string;
+        readonly JWT_SECRET: string;
+        readonly BW_ENCRYPTION_KEY: string;
     }
 }
 

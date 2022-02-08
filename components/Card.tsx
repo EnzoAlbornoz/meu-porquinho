@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import SatRegBlack from "../assets/sat-reg-black.svg";
 // Export Component
 export const Card: FunctionComponent<{
     className?: string;
@@ -16,7 +17,15 @@ export const Card: FunctionComponent<{
     description: string;
     goal: number;
     achieved: number;
-}> = ({ id, title, description, goal, achieved }) => {
+    image?: string;
+}> = ({
+    id,
+    title,
+    description,
+    goal,
+    achieved,
+    image = "/images/placeholder-image.svg",
+}) => {
     // Define Hooks
     const router = useRouter();
     // Compute percentages
@@ -43,7 +52,7 @@ export const Card: FunctionComponent<{
         >
             <div className="relative h-32">
                 <Image
-                    src="/images/placeholder-image.svg"
+                    src={image}
                     layout="fill"
                     objectFit="cover"
                     alt="Porquinho"
@@ -67,7 +76,10 @@ export const Card: FunctionComponent<{
                         {achievedPercentage}%
                     </span>
                     <span className="text-base text-black">
-                        R$ {achieved} arrecados de R$ {goal}
+                        <SatRegBlack className="h-5 my-auto inline-block" />{" "}
+                        {achieved} arrecados de{" "}
+                        <SatRegBlack className="h-5 my-auto inline-block" />{" "}
+                        {goal}
                     </span>
                 </div>
                 <div className="h-4 w-full rounded-lg bg-gray-200 border border-solid border-gray-400 border-opacity-75">

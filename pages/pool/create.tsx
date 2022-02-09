@@ -88,7 +88,7 @@ const Pool: NextPage = () => {
                 <title>Criar porquinho: {title}</title>
             </Head>
             <Header />
-            <main className="mx-auto max-w-7xl py-8 sm:min-h-[calc(100vh-9.5rem)]">
+            <main className="mx-auto max-w-7xl py-8 sm:min-h-[calc(100vh-9.5rem)] min-h-[calc(100vh-9.5rem)]">
                 <section className="px-8 py-4 w-full grid grid-cols-1 gap-4 bg-white rounded-lg drop-shadow">
                     <h1 className="block font-fm-primary text-2xl font-bold">
                         Crie um porquinho
@@ -145,7 +145,7 @@ const Pool: NextPage = () => {
                                 Descrição
                             </legend>
                             <div>
-                                <div ref={quillRef}></div>
+                                <div ref={quillRef} className=""></div>
                             </div>
                         </fieldset>
                         <button

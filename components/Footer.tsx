@@ -6,7 +6,7 @@ import { FunctionComponent } from "react";
 // Define Component
 export const Footer: FunctionComponent = () => {
     return (
-        <footer className="py-4 bg-gray-300">
+        <footer className="py-4 bg-gray-300 sm:px-0 sm:pb-0 px-4">
             <div className="max-w-7xl mx-auto">
                 Made by{" "}
                 <a

@@ -36,18 +36,18 @@ export const Header: FunctionComponent = (props) => {
     const profileHeader = useMemo(() => {
         if (user) {
             return (
-                <section className="flex sm:space-x-9">
+                <section className="flex space-x-2 sm:space-x-9">
                     <Link href="/withdraw" passHref>
                         <a className="my-auto text-[#F9A195] text-xl font-bold rounded-lg hover:cursor-pointer font-fm-primary">
                             Sacar
                         </a>
                     </Link>
                     <Link href="/pool/create" passHref>
-                        <a className="my-auto py-2 px-3 bg-[#F9A195] text-white text-xl font-bold rounded-lg hover:cursor-pointer font-fm-primary">
+                        <a className="my-auto py-1 sm:py-2 px-3 bg-[#F9A195] text-white text-xs font-bold rounded-lg hover:cursor-pointer font-fm-primary">
                             Criar Porquinho
                         </a>
                     </Link>
-                    <span className="inline-block my-auto text-center text-lg font-semibold text-gray-600">
+                    <span className="hidden sm:inline-block my-auto text-center text-lg font-semibold text-gray-600">
                         {user.username}
                     </span>
                     <button
@@ -61,14 +61,14 @@ export const Header: FunctionComponent = (props) => {
             );
         } else {
             return (
-                <section className="flex sm:space-x-9">
+                <section className="flex space-x-2 sm:space-x-9">
                     <Link href="/login" passHref>
                         <a className="my-auto text-[#F9A195] text-xl font-bold rounded-lg hover:cursor-pointer font-fm-primary">
                             Entrar
                         </a>
                     </Link>
                     <Link href="/register" passHref>
-                        <a className="my-auto py-2 px-3 bg-[#F9A195] text-white text-xl font-bold rounded-lg hover:cursor-pointer font-fm-primary">
+                        <a className="my-auto py-1 px-3 bg-[#F9A195] text-white text-xl font-bold rounded-lg hover:cursor-pointer font-fm-primary">
                             Registrar
                         </a>
                     </Link>
@@ -83,12 +83,12 @@ export const Header: FunctionComponent = (props) => {
                 <Link href="/" passHref>
                     <section className="flex space-x-4 hover:cursor-pointer">
                         <PigSvg className="w-8 sm:w-16"></PigSvg>
-                        <h5 className="text-lg sm:text-4xl my-auto font-fm-display">
+                        <h5 className="text-md sm:text-4xl my-auto font-fm-display">
                             Meu Porquinho
                         </h5>
                     </section>
                 </Link>
-                <section className="flex-grow flex">
+                <section className="hidden md:flex" flex-grow>
                     <input
                         className="w-full h-9 px-4 my-auto bg-white border border-solid border-[#BBBBBB] rounded-lg font-fm-primary"
                         placeholder="🔍 Buscar"

@@ -91,19 +91,19 @@ const Pool: NextPage<PoolPageProps> = ({
             </Head>
             <Header />
             <main className="mx-auto max-w-7xl pb-8 pt-4 sm:min-h-[calc(100vh-9.5rem)] font-fm-primary">
-                <div className="px-8 py-6 bg-white grid grid-cols-3 auto-rows-auto gap-4 rounded-lg drop-shadow">
-                    <section className="py-4 col-span-3 text-center">
+                <div className="px-8 py-6 bg-white grid grid-cols-1 sm:grid-cols-3 auto-rows-auto gap-4 rounded-lg drop-shadow">
+                    <section className="py-4 sm:col-span-3 text-center">
                         <h1 className="text-4xl font-bold">{pool.title}</h1>
                         <h2>Criado por: {pool.creator}</h2>
                     </section>
-                    <section className="col-span-2 py-4">
+                    <section className="sm:col-span-2 py-4">
                         <span className="inline-block text-2xl font-semibold">
                             Descrição
                         </span>
                         <hr className="mb-6 mt-2 rounded" />
                         {renderedDescription}
                     </section>
-                    <section className="col-span-1">
+                    <section className="row-start-2 sm:col-span-1">
                         {/* <aside className="px-8 py-6 space-y-10 shadow rounded-lg border border-solid border-gray-100"> */}
                         <aside className="px-8 py-6 space-y-10">
                             <div>

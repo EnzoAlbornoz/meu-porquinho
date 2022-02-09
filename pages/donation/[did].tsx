@@ -84,7 +84,11 @@ const Donation: NextPage<DonationPageProps> = ({ invoice, donationId }) => {
                     </h1>
                     <hr />
                     <div className="mx-auto rounded-lg overflow-hidden drop-shadow-lg">
-                        <QrCode value={invoice} size={512} />
+                        <QrCode
+                            value={invoice}
+                            size={512}
+                            className="!h-64 !w-64 md:!h-[32rem] md:!w-[32rem]"
+                        />
                     </div>
                     <hr />
                     {paidDisplay}

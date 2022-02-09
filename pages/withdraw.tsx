@@ -118,7 +118,7 @@ const Withdraw: NextPage<WithdrawPageProps> = () => {
             <div className="grid gap-4 grid-rows-3 grid-flow-row md:grid-rows-1 md:grid-flow-col">
                 <div className="">
                     <legend className="font-bold">Destinatário: </legend>
-                    <span className="text-sm">
+                    <span className="text-sm break-all md:break-normal">
                         {decodedInvoice.payeeNodeKey}
                     </span>
                 </div>
@@ -175,7 +175,7 @@ const Withdraw: NextPage<WithdrawPageProps> = () => {
             </Head>
 
             <Header></Header>
-            <main className="mx-auto max-w-7xl pb-8 sm:min-h-[calc(100vh-9.5rem)] font-fm-primary">
+            <main className="mx-auto max-w-7xl pb-8 sm:min-h-[calc(100vh-9.5rem)] font-fm-primary min-h-[calc(100vh-11.5rem)]">
                 <div className="px-8 my-8 py-6 bg-white rounded-lg drop-shadow space-y-6 flex flex-col">
                     <div>
                         <h1 className="text-center text-4xl font-bold">

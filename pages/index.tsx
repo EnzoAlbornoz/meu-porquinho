@@ -45,7 +45,7 @@ const Home: NextPage<HomePageProps> = ({ pools }) => {
             )
         );
         return (
-            <ul className="px-8 grid grid-cols-3 gap-6">
+            <ul className="px-8 grid grid-cols-1 grid-flow-row sm:grid-cols-3 gap-6">
                 {pools
                     .filter(
                         (pool) =>
@@ -105,8 +105,10 @@ const Home: NextPage<HomePageProps> = ({ pools }) => {
             </SearchContext.Provider>
             <main className="mx-auto max-w-7xl pb-8 sm:min-h-[calc(100vh-9.5rem)]">
                 <section id="most-popular" className="">
-                    <h2 className="w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
-                        Porquinhos Populares
+                    <h2 className="w-full pt-5 pb-3 text-2xl font-bold font-fm-primary sm:pb-0 px-4">
+                        {search.length !== 0
+                            ? "Resultado da Pesquisa"
+                            : "Porquinhos Populares"}
                     </h2>
                     {/* <Card
                             id={randomUUID()}

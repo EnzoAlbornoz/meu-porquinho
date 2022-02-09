@@ -24,3 +24,7 @@
 .ql-snow * {
     @apply font-fm-primary
 }
+
+.ql-editor {
+    @apply min-h-[6rem];
+}

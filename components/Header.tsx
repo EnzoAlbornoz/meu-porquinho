@@ -1,14 +1,21 @@
 // Import Dependencies
-import { type FunctionComponent, type MouseEventHandler, useMemo } from "react";
+import {
+    type FunctionComponent,
+    type MouseEventHandler,
+    useMemo,
+    useContext,
+} from "react";
 import Link from "next/link";
 import PigSvg from "../assets/piggy-bank.svg";
 import SignOutSvg from "../assets/sign-out-alt-solid.svg";
 import { useJWTUser } from "../lib/hooks/withJWT";
 import { useRouter } from "next/router";
+import { SearchContext } from "../lib/context/search";
 // Export Component
 export const Header: FunctionComponent = (props) => {
     // Define State
     const router = useRouter();
+    const { search, setSearch } = useContext(SearchContext);
     const user = useJWTUser();
     const handleExit: MouseEventHandler<HTMLButtonElement> = useMemo(
         () => (event) => {
@@ -85,6 +92,8 @@ export const Header: FunctionComponent = (props) => {
                     <input
                         className="w-full h-9 px-4 my-auto bg-white border border-solid border-[#BBBBBB] rounded-lg font-fm-primary"
                         placeholder="🔍 Buscar"
+                        value={search}
+                        onChange={(ev) => setSearch(ev.target.value)}
                     ></input>
                 </section>
                 {profileHeader}

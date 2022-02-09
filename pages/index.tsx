@@ -8,17 +8,27 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { DbPool, PublicPool } from "../lib/interfaces/Pool";
 import { getDb } from "../lib/api/mongodb";
-import { useMemo } from "react";
+import {
+    createContext,
+    Dispatch,
+    SetStateAction,
+    useContext,
+    useMemo,
+    useState,
+} from "react";
 import { WithId } from "mongodb";
 import Delta from "quill-delta";
 import pool from "./api/pool";
 import EmptySvg from "../public/images/empty.svg";
+import { SearchContext } from "../lib/context/search";
 // Define Types
 interface HomePageProps {
     pools: Array<PublicPool<true> & { raised: number }>;
 }
 // Define Page
 const Home: NextPage<HomePageProps> = ({ pools }) => {
+    // Define State
+    const [search, setSearch] = useState<string>("");
     // Define Subrenders
     const cards = useMemo(() => {
         if (pools.length === 0) {
@@ -29,42 +39,56 @@ const Home: NextPage<HomePageProps> = ({ pools }) => {
                 </div>
             );
         }
+        console.log(
+            pools.filter((pool) =>
+                pool.title.toLowerCase().includes(search.toLowerCase())
+            )
+        );
         return (
             <ul className="px-8 grid grid-cols-3 gap-6">
-                {pools.map((pool) => {
-                    const delta = new Delta(pool.description);
-                    const image = delta
-                        .filter(
-                            (op) =>
-                                typeof op.insert === "object" &&
-                                !!(op.insert as any).image
-                        )
-                        .map((op: any): string => op.insert.image)
-                        .map((imgUrl) => new URL(imgUrl).pathname)
-                        .at(0);
-                    const descriptionText = delta.reduce((text, op) => {
-                        if (!op.insert)
-                            throw new TypeError(
-                                "only `insert` operations can be transformed!"
-                            );
-                        if (typeof op.insert !== "string") return text + " ";
-                        return text + op.insert;
-                    }, "");
-                    return (
-                        <Card
-                            key={pool.id}
-                            id={pool.id}
-                            title={pool.title}
-                            description={descriptionText}
-                            goal={pool.goal}
-                            achieved={pool.raised}
-                            image={image}
-                        ></Card>
-                    );
-                })}
+                {pools
+                    .filter(
+                        (pool) =>
+                            search.length === 0 ||
+                            pool.title
+                                .toLowerCase()
+                                .includes(search.toLowerCase())
+                    )
+                    .map((pool) => {
+                        const delta = new Delta(pool.description);
+                        const image = delta
+                            .filter(
+                                (op) =>
+                                    typeof op.insert === "object" &&
+                                    !!(op.insert as any).image
+                            )
+                            .map((op: any): string => op.insert.image)
+                            .map((imgUrl) => new URL(imgUrl).pathname)
+                            .at(0);
+                        const descriptionText = delta.reduce((text, op) => {
+                            if (!op.insert)
+                                throw new TypeError(
+                                    "only `insert` operations can be transformed!"
+                                );
+                            if (typeof op.insert !== "string")
+                                return text + " ";
+                            return text + op.insert;
+                        }, "");
+                        return (
+                            <Card
+                                key={pool.id}
+                                id={pool.id}
+                                title={pool.title}
+                                description={descriptionText}
+                                goal={pool.goal}
+                                achieved={pool.raised}
+                                image={image}
+                            ></Card>
+                        );
+                    })}
             </ul>
         );
-    }, [pools]);
+    }, [pools, search]);
     // Define Render
     return (
         <>
@@ -76,8 +100,9 @@ const Home: NextPage<HomePageProps> = ({ pools }) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-
-            <Header></Header>
+            <SearchContext.Provider value={{ search, setSearch }}>
+                <Header></Header>
+            </SearchContext.Provider>
             <main className="mx-auto max-w-7xl pb-8 sm:min-h-[calc(100vh-9.5rem)]">
                 <section id="most-popular" className="">
                     <h2 className="w-full pt-5 pb-3 text-2xl font-bold font-fm-primary">
@@ -148,9 +173,6 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
                         $sum: "$raised.amount",
                     },
                 },
-            },
-            {
-                $limit: 9,
             },
         ])
         .toArray();

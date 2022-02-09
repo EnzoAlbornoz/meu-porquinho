@@ -51,7 +51,6 @@ const Login: NextPage = () => {
                         data: {
                             id: string;
                             token: string;
-                            walletToken: string;
                         };
                     }>
                 ) => {

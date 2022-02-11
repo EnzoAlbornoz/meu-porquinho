@@ -103,7 +103,7 @@ const Pool: NextPage<PoolPageProps> = ({
                         <hr className="mb-6 mt-2 rounded" />
                         {renderedDescription}
                     </section>
-                    <section className="row-start-2 sm:col-span-1">
+                    <section className="row-start-2 sm:row-auto sm:col-span-1">
                         {/* <aside className="px-8 py-6 space-y-10 shadow rounded-lg border border-solid border-gray-100"> */}
                         <aside className="px-8 py-6 space-y-10">
                             <div>

@@ -85,7 +85,9 @@ export const Card: FunctionComponent<{
                 <div className="h-4 w-full rounded-lg bg-gray-200 border border-solid border-gray-400 border-opacity-75">
                     <div
                         className="h-full rounded-lg bg-gradient-to-r from-[#FFEFF4] to-[#F9A195]"
-                        style={{ width: `${achievedRatio * 100}%` }}
+                        style={{
+                            width: `${Math.min(achievedRatio * 100, 100)}%`,
+                        }}
                     ></div>
                 </div>
             </section>

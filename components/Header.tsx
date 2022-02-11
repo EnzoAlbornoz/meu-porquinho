@@ -43,7 +43,7 @@ export const Header: FunctionComponent = (props) => {
                         </a>
                     </Link>
                     <Link href="/pool/create" passHref>
-                        <a className="my-auto py-1 sm:py-2 px-3 bg-[#F9A195] text-white text-xs font-bold rounded-lg hover:cursor-pointer font-fm-primary">
+                        <a className="my-auto py-1 sm:py-2 px-3 bg-[#F9A195] text-white text-xs sm:text-lg font-bold rounded-lg hover:cursor-pointer font-fm-primary">
                             Criar Porquinho
                         </a>
                     </Link>
@@ -88,7 +88,7 @@ export const Header: FunctionComponent = (props) => {
                         </h5>
                     </section>
                 </Link>
-                <section className="hidden md:flex" flex-grow>
+                <section className="hidden md:flex flex-grow">
                     <input
                         className="w-full h-9 px-4 my-auto bg-white border border-solid border-[#BBBBBB] rounded-lg font-fm-primary"
                         placeholder="🔍 Buscar"

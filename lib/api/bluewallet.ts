@@ -112,6 +112,7 @@ export class BlueWallet {
             // Return to User
             return { accessToken, refreshToken };
         } catch (error) {
+            console.error(error);
             // @ts-ignore Cause already exists but its not typed
             throw new Error("Cannot authenticate", { cause: error });
         }

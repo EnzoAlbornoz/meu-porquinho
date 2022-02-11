@@ -10,13 +10,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 First, create a .env file at the project root fullfilling the template bellow:
 ```env
-MONGO_HOST=
-MONGO_PORT=
-MONGO_USER=
-MONGO_PASS=
-MONGO_DB=
-JWT_SECRET=
-BW_ENCRYPTION_KEY=
+MONGO_HOST=localhost
+MONGO_PORT=27017
+MONGO_USER=meu_porquinho
+MONGO_PASS=meu_porquinho
+MONGO_DB=meu_porquinho
+JWT_SECRET=secret
+BW_ENCRYPTION_KEY=supersecret
 ```
 
 Second, run setup the database using:

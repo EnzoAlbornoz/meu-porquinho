@@ -135,6 +135,11 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
     const poolDocs = await db
         .collection<DbPool>("pools")
         .aggregate<WithId<DbPool & { raised: number }>>([
+            {
+                $match: {
+                    "meta.deleted_at": null,
+                },
+            },
             { $sort: { "meta.updatedAt": -1 } },
             {
                 $lookup: {

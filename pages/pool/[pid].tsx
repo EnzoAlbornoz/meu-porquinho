@@ -16,6 +16,7 @@ import { DbDonation } from "../../lib/interfaces/Donation";
 import CurrencyInput from "react-currency-input-field";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
+import { useJWTUser } from "../../lib/hooks/withJWT";
 // Define Types
 interface PoolPageProps {
     pool: PublicPool<true>;
@@ -30,6 +31,7 @@ const Pool: NextPage<PoolPageProps> = ({
 }) => {
     // Define State
     const router = useRouter();
+    const jwt = useJWTUser();
     const [isRequesting, setIsRequesting] = useState(false);
     const [donationAmount, setDonationAmount] = useState(0);
     // Fetch Data
@@ -41,6 +43,9 @@ const Pool: NextPage<PoolPageProps> = ({
         () => Intl.NumberFormat("pt-BR", {}).format(raised),
         [raised]
     );
+    const isCreator = useMemo(() => {
+        return jwt?.username === pool.creator;
+    }, [jwt?.username, pool.creator]);
     // Define Handlers
     const handleDonation: MouseEventHandler<HTMLButtonElement> = (event) => {
         // Prevent Default
@@ -70,6 +75,35 @@ const Pool: NextPage<PoolPageProps> = ({
                 .finally(() => setIsRequesting(false));
         }
     };
+    const handleEdit: MouseEventHandler<HTMLButtonElement> = useMemo(
+        () => (event) => {
+            // Prevent Default
+            event.preventDefault();
+            // Redirect to Edit Page
+            router.push(`/pool/edit/${pool.id}`);
+        },
+        [pool.id, router]
+    );
+    const handleDelete: MouseEventHandler<HTMLButtonElement> = useMemo(
+        () => (event) => {
+            // Prevent Default
+            event.preventDefault();
+            // Soft-Delete Pool
+            setIsRequesting(true);
+            axios
+                .delete(`/api/pool/${pool.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                    },
+                })
+                .then((_res) => {
+                    router.push("/");
+                })
+                .catch((error) => console.error(error))
+                .finally(() => setIsRequesting(false));
+        },
+        [pool.id, router]
+    );
     // Define SubRender
     const renderedDescription = useMemo(() => {
         const ops = Array.isArray(pool.description)
@@ -83,6 +117,28 @@ const Pool: NextPage<PoolPageProps> = ({
             ></article>
         );
     }, [pool.description]);
+
+    const creatorHeader = useMemo(() => {
+        if (!isCreator) return <></>;
+        return (
+            <section className="flex flex-row justify-end space-x-4">
+                <button
+                    type="button"
+                    className="border-2 border-gray-900 border-opacity-10 bg-[#f6f8fa] rounded-lg px-4 py-1"
+                    onClick={handleEdit}
+                >
+                    Editar
+                </button>
+                <button
+                    type="button"
+                    className="border-2 border-gray-900 border-opacity-10 text-[#cf222e] bg-[#f6f8fa] rounded-lg px-4 py-1"
+                    onClick={handleDelete}
+                >
+                    Excluir
+                </button>
+            </section>
+        );
+    }, [isCreator, handleEdit, handleDelete]);
     // Define SubRender
     return (
         <>
@@ -93,6 +149,7 @@ const Pool: NextPage<PoolPageProps> = ({
             <main className="mx-auto max-w-7xl pb-8 pt-4 sm:min-h-[calc(100vh-9.5rem)] font-fm-primary">
                 <div className="px-8 py-6 bg-white grid grid-cols-1 sm:grid-cols-3 auto-rows-auto gap-4 rounded-lg drop-shadow">
                     <section className="py-4 sm:col-span-3 text-center">
+                        {creatorHeader}
                         <h1 className="text-4xl font-bold">{pool.title}</h1>
                         <h2>Criado por: {pool.creator}</h2>
                     </section>
@@ -151,13 +208,21 @@ const Pool: NextPage<PoolPageProps> = ({
                                 <button
                                     disabled={isRequesting}
                                     type="button"
-                                    className="mx-auto px-6 py-3 w-full flex justify-center space-x-4 bg-[#F9A195] text-white rounded-lg hover:drop-shadow"
+                                    className="mx-auto px-6 py-3 w-full flex justify-center space-x-4 bg-[#F9A195] text-white rounded-lg hover:drop-shadow transition disabled:bg-gray-300"
                                     onClick={handleDonation}
                                 >
-                                    <SatRegEps className="inline-block w-8 my-auto" />
-                                    <span className="inline-block font text-xl my-auto">
-                                        Contribuir
-                                    </span>
+                                    {isRequesting ? (
+                                        <span className="inline-block h-8">
+                                            ...
+                                        </span>
+                                    ) : (
+                                        <>
+                                            <SatRegEps className="inline-block w-8 h-8 my-auto" />
+                                            <span className="inline-block font text-xl my-auto">
+                                                Contribuir
+                                            </span>
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </aside>
@@ -185,6 +250,7 @@ export const getServerSideProps: GetServerSideProps<
     const db = await getDb();
     const pooDocl = await db.collection<PrivatePool>("pools").findOne({
         _id: new ObjectId(poolId),
+        "meta.deleted_at": null,
     });
     const creatorDocl = await db.collection<DbUser>("users").findOne({
         _id: new ObjectId(pooDocl?.creator),

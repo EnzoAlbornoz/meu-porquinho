@@ -155,6 +155,7 @@ export class BlueWallet {
         try {
             if (amount < 0)
                 throw new RangeError("Amount need to be a positive value");
+            console.log(accessToken);
             const res = await this.endpoint.post<CreateInvoiceResData>(
                 "addinvoice",
                 {

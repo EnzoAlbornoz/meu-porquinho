@@ -8,13 +8,15 @@ import { isBefore } from "date-fns";
 // Export Hook
 export function useJWTUser() {
     // Define State
-    const [jwt, setJWT] = useState<(JwtPayload & PublicUser) | null>(null);
+    const [jwt, setJWT] = useState<(JwtPayload & PublicUser<true>) | null>(
+        null
+    );
     // Try read JWT from Local Storage
     useEffect(() => {
         const jwtRaw = localStorage.getItem("jwt");
         if (jwtRaw) {
             const decodedJWT = decode(jwtRaw, { json: true }) as JwtPayload &
-                PublicUser;
+                PublicUser<true>;
             if (
                 !decodedJWT.exp ||
                 isBefore(new Date(), new Date(decodedJWT.exp * 1000))
